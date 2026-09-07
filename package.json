@@ -1,0 +1,15 @@
+{
+  "name": "onespace",
+  "version": "1.0.0",
+  "description": "OneSpace — Unified Personal Management System",
+  "scripts": {
+    "dev:backend": "npm --prefix onespace-backend run dev",
+    "dev:frontend": "npm --prefix onespace-frontend run dev",
+    "build:frontend": "npm --prefix onespace-frontend run build",
+    "test:backend": "npm --prefix onespace-backend run test",
+    "seed": "npm --prefix onespace-backend run seed"
+  },
+  "keywords": ["onespace", "personal-management", "productivity", "react", "express", "mongodb"],
+  "author": "OneSpace Team",
+  "license": "ISC"
+}

@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --app-bg: #0b0d0f;
+    --sidebar-bg: #111417;
+    --panel-bg: #15191c;
+    --panel-alt: #1b2024;
+    --panel-border: rgba(183, 196, 193, 0.14);
+    --soft-text: #91a09d;
+    --strong-text: #f3f6f4;
+    --accent: #99e5c2;
+    --accent-strong: #b5f2d2;
+  }
+
+  html { background-color: var(--app-bg); scroll-behavior: smooth; }
+  body {
+    @apply antialiased text-slate-100 selection:bg-emerald-300/30 selection:text-white;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 82% -12%, rgba(83, 190, 143, 0.11), transparent 30%),
+      radial-gradient(circle at 5% 25%, rgba(54, 89, 112, 0.12), transparent 28%),
+      linear-gradient(180deg, #0b0d0f 0%, #0b0d0f 100%);
+    font-family: 'Inter', 'Manrope', 'Segoe UI', sans-serif;
+    letter-spacing: -0.012em;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  * { box-sizing: border-box; }
+  #root { min-height: 100vh; }
+  button, a, input, textarea, select { outline-color: rgba(153, 229, 194, 0.8); }
+}
+
+@layer components {
+  .panel-surface { @apply rounded-2xl border border-white/[0.08] bg-[#15191c] shadow-[0_18px_40px_rgba(0,0,0,0.22)]; }
+  .panel-soft { @apply rounded-2xl border border-white/[0.07] bg-[#1b2024]; }
+  .text-balance { text-wrap: balance; }
+  .premium-divider { border-color: rgba(183, 196, 193, 0.11); }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0b0d0f; }
+::-webkit-scrollbar-thumb { background: rgba(128, 147, 142, 0.5); border-radius: 9999px; border: 2px solid #0b0d0f; }
+::-webkit-scrollbar-thumb:hover { background: rgba(153, 229, 194, 0.75); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.24s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+button:active { transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
