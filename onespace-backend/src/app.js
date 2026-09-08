@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 const env = require('./config/env');
 const errorHandler = require('./middlewares/errorHandler');
 const rateLimiter = require('./middlewares/rateLimiter');
@@ -64,7 +65,23 @@ app.use('/api/search', searchRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/settings', settingsRoutes);
 
-// 404 Handler for undefined routes
+// Static frontend build serving (production fallback)
+const frontendDist = path.resolve(__dirname, '../../onespace-frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    const indexPath = path.join(frontendDist, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
+    }
+    next();
+  });
+}
+
+// 404 Handler for undefined API routes
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,

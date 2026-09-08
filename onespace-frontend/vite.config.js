@@ -15,5 +15,32 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  preview: {
+    port: 4173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      },
+      '/uploads': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
+    }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-charts': ['recharts'],
+          'vendor-icons': ['lucide-react'],
+          'vendor-utils': ['axios', 'canvas-confetti', '@hello-pangea/dnd']
+        }
+      }
+    }
   }
 });
+

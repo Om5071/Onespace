@@ -6,8 +6,12 @@
     "dev:backend": "npm --prefix onespace-backend run dev",
     "dev:frontend": "npm --prefix onespace-frontend run dev",
     "build:frontend": "npm --prefix onespace-frontend run build",
+    "build": "npm --prefix onespace-frontend run build",
+    "preview": "npm --prefix onespace-frontend run preview",
+    "preview:frontend": "npm --prefix onespace-frontend run preview",
     "test:backend": "npm --prefix onespace-backend run test",
-    "seed": "npm --prefix onespace-backend run seed"
+    "seed": "npm --prefix onespace-backend run seed",
+    "start": "npm --prefix onespace-backend start"
   },
   "keywords": ["onespace", "personal-management", "productivity", "react", "express", "mongodb"],
   "author": "OneSpace Team",

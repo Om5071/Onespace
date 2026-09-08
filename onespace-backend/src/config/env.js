@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
+// Load .env configuration
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 module.exports = {
@@ -12,5 +13,9 @@ module.exports = {
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'onespace_super_secure_refresh_secret_key_2026',
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d',
   UPLOAD_DIR: process.env.UPLOAD_DIR || path.resolve(__dirname, '../../uploads'),
-  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173'
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
+  VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY || '',
+  VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY || '',
+  VAPID_EMAIL: process.env.VAPID_EMAIL || 'mailto:support@onespace.app'
 };
+
