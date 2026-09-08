@@ -4,7 +4,7 @@ import { useNotification } from '../context/NotificationContext';
 import { Button } from '../components/common/Button';
 import { Loader } from '../components/common/Loader';
 import { ProgressBar } from '../components/common/ProgressBar';
-import { formatDate } from '../utils/formatDate';
+import { formatCurrency, formatDate } from '../utils/formatDate';
 import {
   Smile,
   Meh,
@@ -334,7 +334,7 @@ export const DailyTrackerPage = () => {
                   <p className="text-[11px] text-slate-400">Log daily purchases and see them auto-synced into your monthly analytics</p>
                 </div>
                 <span className="text-sm font-bold text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-xl border border-emerald-800/50">
-                  Total: ${totalExpense.toFixed(2)}
+                  Total: {formatCurrency(totalExpense)}
                 </span>
               </div>
 
@@ -348,7 +348,7 @@ export const DailyTrackerPage = () => {
                 />
                 <input
                   type="number"
-                  placeholder="Amount ($)"
+                  placeholder="Amount (₹)"
                   value={newExpense.amount}
                   onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
                   className="rounded-xl border border-slate-700 bg-[#131D31] px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
@@ -384,7 +384,7 @@ export const DailyTrackerPage = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-emerald-400">${Number(e.amount).toFixed(2)}</span>
+                        <span className="font-bold text-emerald-400">{formatCurrency(e.amount)}</span>
                         <button onClick={() => handleRemoveExpense(i)} className="text-slate-500 hover:text-rose-400 p-1 cursor-pointer">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

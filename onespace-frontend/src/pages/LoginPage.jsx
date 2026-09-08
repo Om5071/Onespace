@@ -37,10 +37,6 @@ export const LoginPage = () => {
       <div>
         <h2 className="text-xl font-bold text-white">Sign in to your account</h2>
         <p className="text-xs text-slate-400 mt-1">Enter your details to access your personal workspace</p>
-        <div className="mt-4 rounded-xl border border-slate-700/70 bg-slate-900/40 p-3 text-[11px] text-slate-400">
-          <p className="font-semibold text-slate-300">Your workspace profile</p>
-          
-        </div>
       </div>
 
       {error && (

@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const env = require('../config/env');
-const { connectDB } = require('../config/db');
+const { connectDB, disconnectDB } = require('../config/db');
 
 // Import all 12 models
 const User = require('../models/User');
@@ -61,15 +61,23 @@ async function seedDatabase() {
   // 2. Setup Users
   const salt = await bcrypt.genSalt(10);
   const passHash1 = await bcrypt.hash('654321', salt);
+  const passHash2 = await bcrypt.hash('password123', salt);
 
   const usersToSeed = [
     {
-      name: 'Om',
-      email: 'om@gmail.com',
+      name: 'Prabhakar Pandey',
+      email: 'p@gmail.com',
       passwordHash: passHash1,
-      bio: 'Software Engineer · Bengaluru',
-      role: 'user'
+      bio: 'Full Stack Engineer & Productivity Enthusiast',
+      role: 'admin'
     },
+    {
+      name: 'Demo User',
+      email: 'demo@onespace.app',
+      passwordHash: passHash2,
+      bio: 'OneSpace Demo Account for Testing & Reviews',
+      role: 'user'
+    }
   ];
 
   for (const userData of usersToSeed) {
@@ -173,18 +181,18 @@ async function seedDatabase() {
       {
         user: userId,
         userId: userId,
-        title: 'Build ₹1,00,000 Emergency Fund',
-        description: 'Automate a ₹8,000 monthly transfer and keep everyday spending within a practical salary-based budget.',
+        title: 'Save $10,000 Emergency Fund',
+        description: 'Automate monthly savings and cut discretionary spending to build safety cushion.',
         category: 'Finance',
         status: 'active',
         targetDate: new Date('2026-10-31'),
-        metrics: { targetValue: 100000, currentValue: 64000, unit: 'INR', startValue: 2000 },
+        metrics: { targetValue: 10000, currentValue: 8200, unit: 'USD', startValue: 2000 },
         progressPercent: 82,
         color: '#f59e0b',
         milestones: [
-          { title: 'Reach ₹40,000 Milestone', isCompleted: true },
-          { title: 'Reach ₹70,000 Milestone', isCompleted: true },
-          { title: 'Reach ₹1,00,000 Goal', isCompleted: false }
+          { title: 'Reach $4,000 Milestone', isCompleted: true },
+          { title: 'Reach $7,000 Milestone', isCompleted: true },
+          { title: 'Hit $10,000 Goal', isCompleted: false }
         ]
       },
       {
@@ -215,8 +223,8 @@ async function seedDatabase() {
       { goal: createdGoals[1]._id, goalId: createdGoals[1]._id, user: userId, userId, date: new Date('2026-07-20'), valueAdded: 3, currentTotal: 3, note: 'Finished 3 technical architecture books' },
       { goal: createdGoals[1]._id, goalId: createdGoals[1]._id, user: userId, userId, date: new Date('2026-08-10'), valueAdded: 3, currentTotal: 6, note: 'Finished Clean Architecture & SRE books' },
       { goal: createdGoals[1]._id, goalId: createdGoals[1]._id, user: userId, userId, date: new Date('2026-08-24'), valueAdded: 2, currentTotal: 8, note: 'Finished Staff Engineer by Will Larson' },
-      { goal: createdGoals[2]._id, goalId: createdGoals[2]._id, user: userId, userId, date: new Date('2026-07-31'), valueAdded: 20000, currentTotal: 40000, note: 'July monthly savings deposit' },
-      { goal: createdGoals[2]._id, goalId: createdGoals[2]._id, user: userId, userId, date: new Date('2026-08-15'), valueAdded: 24000, currentTotal: 64000, note: 'Mid-quarter bonus allocation' }
+      { goal: createdGoals[2]._id, goalId: createdGoals[2]._id, user: userId, userId, date: new Date('2026-07-31'), valueAdded: 2000, currentTotal: 4000, note: 'July monthly savings deposit' },
+      { goal: createdGoals[2]._id, goalId: createdGoals[2]._id, user: userId, userId, date: new Date('2026-08-15'), valueAdded: 4200, currentTotal: 8200, note: 'Mid-quarter bonus allocation' }
     ];
     await GoalProgress.insertMany(goalProgressList);
 
@@ -350,7 +358,7 @@ async function seedDatabase() {
         user: userId,
         userId,
         title: 'Weekly Expense Budget Reconciliation',
-        description: 'Review August categorized expenses against monthly ₹35,000 threshold budget.',
+        description: 'Review August categorized expenses against monthly $3,000 threshold budget.',
         status: 'pending',
         priority: 'medium',
         dueDate: new Date('2026-08-30T17:00:00.000Z'),
@@ -890,16 +898,16 @@ OneSpace is a high-performance personal operating system designed to unite produ
     const baseWeight = 77.8;
 
     const sampleExpenseCatalog = [
-      { description: 'Weekly groceries & vegetables', amount: 845, category: 'Food' },
-      { description: 'Office lunch & chai', amount: 24.50, category: 'Food' },
-      { description: 'Metro recharge & commute', amount: 799, category: 'Transport' },
-      { description: 'JioFiber internet bill', amount: 650, category: 'Bills' },
-      { description: 'Electricity & utilities', amount: 95.00, category: 'Bills' },
-      { description: 'Local gym membership', amount: 1200, category: 'Health' },
-      { description: 'Phone + cloud subscriptions', amount: 799, category: 'Bills' },
-      { description: 'Books & learning', amount: 520, category: 'Shopping' },
-      { description: 'Weekend dinner & movie', amount: 62.00, category: 'Entertainment' },
-      { description: 'Household essentials', amount: 79.00, category: 'Shopping' }
+      { description: 'Fresh Produce & Groceries', amount: 84.50, category: 'Food' },
+      { description: 'Team Lunch & Artisan Coffee', amount: 24.50, category: 'Food' },
+      { description: 'Metro Pass & Commute', amount: 35.00, category: 'Transport' },
+      { description: 'High-Speed Fiber Internet Bill', amount: 65.00, category: 'Bills' },
+      { description: 'Electricity & Utilities', amount: 95.00, category: 'Bills' },
+      { description: 'Gym & Fitness Membership', amount: 50.00, category: 'Health' },
+      { description: 'Cloud Server & Domain Hosting', amount: 35.00, category: 'Bills' },
+      { description: 'Architecture & System Design Books', amount: 48.00, category: 'Shopping' },
+      { description: 'Weekend Cinema & Dinner', amount: 62.00, category: 'Entertainment' },
+      { description: 'Hardware Accessories & Ergonomic Mouse', amount: 79.00, category: 'Shopping' }
     ];
 
     const standardHabits = [
@@ -1021,12 +1029,13 @@ OneSpace is a high-performance personal operating system designed to unite produ
   }
 
   console.log('✅ ALL DATABASE SEEDING COMPLETED SUCCESSFULLY!');
-  await mongoose.disconnect();
+  await disconnectDB();
 }
 
 if (require.main === module) {
-  seedDatabase().catch((err) => {
+  seedDatabase().catch(async (err) => {
     console.error('❌ Database Seeding Error:', err);
+    await disconnectDB();
     process.exit(1);
   });
 }

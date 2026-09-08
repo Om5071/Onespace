@@ -281,7 +281,7 @@ export const GoalsPage = () => {
         <form onSubmit={handleSaveGoal} className="space-y-4">
           <Input
             label="Goal Title"
-            placeholder="e.g. Read 20 books, Save $5000, Learn Rust..."
+            placeholder="e.g. Read 20 books, Save ₹5000, Learn Rust..."
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required

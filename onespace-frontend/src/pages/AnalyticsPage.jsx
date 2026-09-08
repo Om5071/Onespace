@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { analyticsApi } from '../api/analyticsApi';
 import { Loader } from '../components/common/Loader';
 import { ProgressBar } from '../components/common/ProgressBar';
-import { formatDate } from '../utils/formatDate';
+import { formatCurrency, formatDate } from '../utils/formatDate';
 import {
   ResponsiveContainer,
   LineChart,
@@ -176,7 +176,7 @@ export const AnalyticsPage = () => {
             <span className="text-xs text-slate-400 flex items-center gap-1">
               <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Total Period Expenses
             </span>
-            <p className="text-2xl font-extrabold text-white">${totalExpense.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p className="text-2xl font-extrabold text-white">{formatCurrency(totalExpense)}</p>
             <p className="text-[10px] text-slate-500">Across {days} tracked days</p>
           </div>
 
@@ -184,7 +184,7 @@ export const AnalyticsPage = () => {
             <span className="text-xs text-slate-400 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-blue-400" /> Daily Run-Rate (Average)
             </span>
-            <p className="text-2xl font-extrabold text-blue-400">${dailyAvg.toFixed(2)}</p>
+            <p className="text-2xl font-extrabold text-blue-400">{formatCurrency(dailyAvg)}</p>
             <p className="text-[10px] text-slate-500">Average spending per day</p>
           </div>
 
@@ -192,7 +192,7 @@ export const AnalyticsPage = () => {
             <span className="text-xs text-slate-400 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-purple-400" /> Projected Next-Month Spend
             </span>
-            <p className="text-2xl font-extrabold text-purple-400">${projectedNextMonth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p className="text-2xl font-extrabold text-purple-400">{formatCurrency(projectedNextMonth)}</p>
             <p className="text-[10px] text-slate-500">Recommended budget for next 30 days</p>
           </div>
         </div>
@@ -216,7 +216,7 @@ export const AnalyticsPage = () => {
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-slate-200">{cat.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-white">${cat.value.toFixed(2)}</span>
+                        <span className="text-white">{formatCurrency(cat.value)}</span>
                         <span className="text-[10px] text-slate-400">({cat.percentage}%)</span>
                       </div>
                     </div>
@@ -245,7 +245,7 @@ export const AnalyticsPage = () => {
                       <p className="font-semibold text-white">{exp.description}</p>
                       <p className="text-[10px] text-slate-400">{formatDate(exp.date)} • <span className="text-slate-300">{exp.category}</span></p>
                     </div>
-                    <span className="font-bold text-emerald-400">${exp.amount.toFixed(2)}</span>
+                    <span className="font-bold text-emerald-400">{formatCurrency(exp.amount)}</span>
                   </div>
                 ))}
               </div>

@@ -1,18 +1,34 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
 const env = require('./env');
 
 let mongodInstance = null;
 
-const connectDB = async () => {
+// Set reliable DNS servers if connecting to MongoDB Atlas SRV URI on Windows
+if (env.MONGODB_URI && env.MONGODB_URI.startsWith('mongodb+srv://')) {
   try {
-    // Attempt connecting to specified MONGODB_URI with a 2-second timeout
+    dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+  } catch (dnsErr) {
+    console.warn('[MongoDB] Could not set custom DNS servers:', dnsErr.message);
+  }
+}
+
+const getMaskedUri = (uri) => {
+  if (!uri) return '';
+  return uri.replace(/:([^@]+)@/, ':****@');
+};
+
+const connectDB = async () => {
+  const maskedUri = getMaskedUri(env.MONGODB_URI);
+  try {
+    // Attempt connecting to specified MONGODB_URI with a 10-second timeout
     await mongoose.connect(env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 2000
+      serverSelectionTimeoutMS: 10000
     });
-    console.log(`[MongoDB] Connected successfully to: ${env.MONGODB_URI}`);
+    console.log(`[MongoDB] Connected successfully to Atlas/External database: ${maskedUri}`);
   } catch (err) {
-    console.warn(`[MongoDB] External connection to ${env.MONGODB_URI} failed: ${err.message}`);
-    console.log('[MongoDB] Spinning up in-memory MongoDB server for zero-config local development...');
+    console.warn(`[MongoDB] Atlas connection to ${maskedUri} failed: ${err.message}`);
+    console.log('[MongoDB] Spinning up in-memory MongoDB server as fallback...');
     
     try {
       const { MongoMemoryServer } = require('mongodb-memory-server');

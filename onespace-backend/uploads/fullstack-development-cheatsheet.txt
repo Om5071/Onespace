@@ -1,0 +1,4 @@
+OneSpace FullStack CheatSheet:
+- Frontend: React + Tailwind + Lucide
+- Backend: Node Express + Mongoose + JWT
+- DB: MongoDB

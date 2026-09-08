@@ -3,6 +3,8 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const env = require('../config/env');
 
+const { connectDB, disconnectDB } = require('../config/db');
+
 const User = require('../models/User');
 const UserSettings = require('../models/UserSettings');
 const Task = require('../models/Task');
@@ -16,9 +18,8 @@ const FitnessRecord = require('../models/FitnessRecord');
 const Goal = require('../models/Goal');
 const GoalProgress = require('../models/GoalProgress');
 
-async function seedDataForUser(email = 'om@gmail.com') {
-  await mongoose.connect(env.MONGODB_URI);
-  console.log(`[Seed] Connected to database: ${env.MONGODB_URI}`);
+async function seedDataForUser(email = 'p@gmail.com') {
+  await connectDB();
 
   let user = await User.findOne({ email });
   if (!user) {
@@ -26,10 +27,10 @@ async function seedDataForUser(email = 'om@gmail.com') {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('654321', salt);
     user = await User.create({
-      name: 'Om',
+      name: 'Prabhakar Pandey',
       email: email,
       passwordHash,
-      bio: 'Software Engineer · Bengaluru'
+      bio: 'Full Stack Engineer & Productivity Enthusiast'
     });
   }
 
@@ -83,13 +84,13 @@ async function seedDataForUser(email = 'om@gmail.com') {
     {
       user: userId,
       userId: userId,
-      title: 'Build ₹1,00,000 Emergency Fund',
-      description: 'Automate a practical monthly savings transfer from salary.',
+      title: 'Save $10,000 Emergency Fund',
+      description: 'Automate monthly savings into high-yield savings account.',
       category: 'Finance',
       timeframe: 'medium_term',
       targetDate: new Date('2026-10-31'),
       status: 'active',
-      metrics: { targetValue: 100000, currentValue: 64000, unit: 'INR' },
+      metrics: { targetValue: 10000, currentValue: 8200, unit: 'USD' },
       progressPercent: 82
     },
     {
@@ -319,7 +320,7 @@ async function seedDataForUser(email = 'om@gmail.com') {
       user: userId,
       userId: userId,
       title: 'Q3 & Q4 Financial & Investment Strategy',
-      content: `## Target Asset Allocations 2026\n\n- **Total Stock Index (Nifty 50 index fund):** 60%\n- **International Index (balanced index fund):** 20%\n- **Emergency High-Yield Savings:** 15%\n- **Alternative / Tech Opportunities:** 5%\n\n*Rule of thumb:* Automate monthly SIP transfers on the 28th of every month.`,
+      content: `## Target Asset Allocations 2026\n\n- **Total Stock Index (VTI):** 60%\n- **International Index (VXUS):** 20%\n- **Emergency High-Yield Savings:** 15%\n- **Alternative / Tech Opportunities:** 5%\n\n*Rule of thumb:* Automate monthly SIP transfers on the 28th of every month.`,
       category: 'Finance',
       tags: ['investing', 'savings', 'future'],
       color: '#10B981',
@@ -811,10 +812,11 @@ async function seedDataForUser(email = 'om@gmail.com') {
   console.log(`- 4 Goals with 8 Milestone Progress Updates`);
   console.log(`======================================================\n`);
 
-  await mongoose.disconnect();
+  await disconnectDB();
 }
 
-seedDataForUser('om@gmail.com').catch((err) => {
+seedDataForUser('p@gmail.com').catch(async (err) => {
   console.error('[Seed Error]:', err);
+  await disconnectDB();
   process.exit(1);
 });

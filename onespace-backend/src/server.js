@@ -2,17 +2,11 @@ const app = require('./app');
 const env = require('./config/env');
 const { connectDB } = require('./config/db');
 const { initReminderScheduler } = require('./services/reminderScheduler');
-const { ensureDevDemoAccounts } = require('./services/devDemoAccounts');
 
 const startServer = async () => {
   try {
     // 1. Connect to Database
     await connectDB();
-
-    // Keep first-run local development usable without requiring a separate seed process.
-    if (env.NODE_ENV !== 'production') {
-      await ensureDevDemoAccounts();
-    }
 
     // 2. Initialize background cron scheduler
     initReminderScheduler();

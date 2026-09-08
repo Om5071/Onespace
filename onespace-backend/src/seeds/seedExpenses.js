@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const env = require('../config/env');
+const { connectDB, disconnectDB } = require('../config/db');
 const User = require('../models/User');
 const DailyActivity = require('../models/DailyActivity');
 
 async function seedExpenses() {
-  await mongoose.connect(env.MONGODB_URI);
-  const user = await User.findOne({ email: 'om@gmail.com' });
+  await connectDB();
+  const user = await User.findOne({ email: 'p@gmail.com' });
   if (!user) {
-    console.log('User om@gmail.com not found');
+    console.log('User p@gmail.com not found');
+    await disconnectDB();
     process.exit(1);
   }
 
@@ -41,8 +43,12 @@ async function seedExpenses() {
     }
   }
 
-  console.log('Successfully seeded multi-month expenses for user om@gmail.com!');
-  await mongoose.disconnect();
+  console.log('Successfully seeded multi-month expenses for user p@gmail.com!');
+  await disconnectDB();
 }
 
-seedExpenses().catch(console.error);
+seedExpenses().catch(async (err) => {
+  console.error(err);
+  await disconnectDB();
+  process.exit(1);
+});

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { NotificationDropdown } from '../components/notifications/NotificationDropdown';
 import { CommandPaletteModal } from '../components/search/CommandPaletteModal';
@@ -20,10 +20,10 @@ import {
   Search,
   LogOut,
   Menu,
+  X,
   ChevronLeft,
   ChevronRight,
-  Bell,
-  UserRound,
+  Bell
 } from 'lucide-react';
 
 export const MainLayout = () => {
@@ -33,9 +33,10 @@ export const MainLayout = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
 
+  // Listen for Ctrl+K or Cmd+K
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setIsSearchOpen((prev) => !prev);
       }
@@ -44,6 +45,7 @@ export const MainLayout = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Close mobile sidebar on route change
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname]);
@@ -51,149 +53,129 @@ export const MainLayout = () => {
   const navItems = [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/tasks', label: 'Tasks', icon: CheckSquare },
-    { to: '/calendar', label: 'Calendar', icon: Calendar },
     { to: '/notes', label: 'Notes', icon: FileText },
-    { to: '/documents', label: 'Documents', icon: FolderArchive },
+    { to: '/calendar', label: 'Calendar', icon: Calendar },
     { to: '/reminders', label: 'Reminders', icon: Clock },
     { to: '/daily-tracker', label: 'Daily Tracker', icon: Smile },
     { to: '/fitness', label: 'Fitness', icon: Dumbbell },
     { to: '/goals', label: 'Goals', icon: Target },
+    { to: '/documents', label: 'Documents', icon: FolderArchive },
+    { to: '/notifications', label: 'Notifications', icon: Bell },
     { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/settings', label: 'Settings', icon: Settings }
   ];
 
-  const pageLabel = navItems.find((item) => item.to === location.pathname)?.label || 'OneSpace';
-  const initials = user?.name ? user.name.split(' ').map((part) => part[0]).slice(0, 2).join('') : 'U';
-
   return (
-    <div className="min-h-screen bg-[#0b0d0f] text-slate-100 selection:bg-slate-600 selection:text-white">
+    <div className="min-h-screen flex bg-[#0B0F19] text-slate-100 selection:bg-blue-600 selection:text-white">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-[#0B0F19]/80 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r border-white/[0.08] bg-[#111417] shadow-[12px_0_36px_rgba(2,6,23,0.2)] transition-all duration-300 ${
-          collapsed ? 'w-[76px]' : 'w-[252px]'
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col bg-[#0F172A]/95 border-r border-slate-800/80 shadow-[8px_0_30px_rgba(2,6,23,0.24)] backdrop-blur-xl transition-all duration-300 ${
+          collapsed ? 'w-20' : 'w-64'
         } ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="flex h-[78px] items-center justify-between border-b border-white/[0.07] px-4">
-          <NavLink to="/" className="flex min-w-0 items-center gap-3 overflow-hidden">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-500/30 bg-[#20352f] text-[#b5f2d2] shadow-[0_8px_22px_rgba(2,6,23,0.25)]">
-              <Layers className="h-[18px] w-[18px]" strokeWidth={1.8} />
+        <div className="flex items-center justify-between h-16 px-4 border-b border-slate-800/80">
+          <NavLink to="/" className="flex items-center gap-3 overflow-hidden">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-[0_10px_24px_rgba(59,130,246,0.35)] border border-white/10">
+              <Layers className="w-5 h-5" />
             </div>
             {!collapsed && (
-              <div className="min-w-0 leading-tight">
-                <div className="truncate text-[15px] font-semibold tracking-[-0.03em] text-slate-50">OneSpace</div>
-                <div className="mt-1 truncate text-[9px] font-medium uppercase tracking-[0.13em] text-[#82908d]">Personal OS</div>
-              </div>
+              <span className="font-bold text-lg tracking-[-0.04em] whitespace-nowrap text-white">
+                One<span className="bg-gradient-to-r from-blue-300 via-indigo-300 to-violet-300 bg-clip-text text-transparent">Space</span>
+              </span>
             )}
           </NavLink>
+
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden rounded-lg p-1.5 text-[#82908d] transition-colors hover:bg-slate-800/80 hover:text-slate-200 lg:flex"
+            className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-200 cursor-pointer transition-colors"
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
-        <div className={`px-3 pt-6 ${collapsed ? 'px-2' : ''}`}>
-          {!collapsed && <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#82908d]">Workspace</p>}
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    `group flex items-center gap-3 rounded-lg border px-3 py-2.5 text-[12px] font-medium transition-all duration-150 ${
-                      isActive
-                        ? 'border-slate-600/50 bg-[#20352f] text-slate-50 shadow-[inset_3px_0_0_#99e5c2]'
-                        : 'border-transparent text-[#9aa9a5] hover:border-white/[0.07] hover:bg-[#1b2024] hover:text-slate-100'
-                    } ${collapsed ? 'justify-center px-2' : ''}`
-                  }
-                  title={collapsed ? item.label : undefined}
-                >
-                  <Icon className="h-[17px] w-[17px] shrink-0" strokeWidth={1.8} />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </NavLink>
-              );
-            })}
-          </nav>
-        </div>
+        <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-violet-600/20 text-white border border-blue-500/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_8px_20px_rgba(59,130,246,0.12)]'
+                      : 'text-slate-400 hover:bg-slate-800/70 hover:text-slate-100 border border-transparent'
+                  } ${collapsed ? 'justify-center px-2' : ''}`
+                }
+                title={collapsed ? item.label : undefined}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                {!collapsed && <span className="truncate">{item.label}</span>}
+              </NavLink>
+            );
+          })}
+        </nav>
 
-        <div className={`mt-auto border-t border-white/[0.07] p-3 ${collapsed ? 'px-2' : ''}`}>
-          {!collapsed && <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#82908d]">Account</p>}
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `mb-2 flex items-center gap-3 rounded-lg border px-3 py-2.5 text-[12px] font-medium transition-colors ${
-                isActive ? 'border-slate-600/50 bg-[#20352f] text-slate-50' : 'border-transparent text-[#9aa9a5] hover:bg-[#1b2024] hover:text-slate-100'
-              } ${collapsed ? 'justify-center px-2' : ''}`
-            }
-            title={collapsed ? 'Settings' : undefined}
-          >
-            <Settings className="h-[17px] w-[17px] shrink-0" strokeWidth={1.8} />
-            {!collapsed && <span>Settings</span>}
-          </NavLink>
-          <div className={`flex items-center gap-3 rounded-xl border border-white/[0.08] bg-[#15191c] p-2.5 ${collapsed ? 'justify-center' : ''}`}>
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2b5144] text-[10px] font-semibold uppercase text-[#e4f4ed]">
-              {initials}
+        <div className="p-3 border-t border-slate-800/80">
+          <div className={`flex items-center gap-3 p-2 rounded-xl bg-[#131D31]/80 border border-slate-800/60 ${collapsed ? 'justify-center' : ''}`}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-xs shrink-0 uppercase shadow-[0_8px_18px_rgba(99,102,241,0.35)]">
+              {user?.name ? user.name[0] : 'U'}
             </div>
             {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[11px] font-semibold text-slate-100">{user?.name || 'User'}</p>
-                <p className="truncate text-[10px] text-[#82908d]">{user?.email || 'Account'}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold truncate text-slate-100">{user?.name || 'User'}</p>
+                <p className="text-[10px] text-slate-400 truncate">{user?.email}</p>
               </div>
             )}
             {!collapsed && (
-              <button onClick={logout} className="rounded-md p-1.5 text-[#82908d] transition-colors hover:bg-slate-800 hover:text-slate-200" title="Logout">
-                <LogOut className="h-3.5 w-3.5" />
+              <button
+                onClick={logout}
+                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
               </button>
             )}
           </div>
         </div>
       </aside>
 
-      <div className={`flex min-h-screen flex-1 flex-col transition-all duration-300 ${collapsed ? 'lg:pl-[76px]' : 'lg:pl-[252px]'}`}>
-        <header className="sticky top-0 z-30 flex h-[78px] items-center justify-between border-b border-white/[0.07] bg-[#111417]/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-4">
-            <button onClick={() => setSidebarOpen(true)} className="rounded-lg p-2 text-[#9aa9a5] transition-colors hover:bg-slate-800/80 hover:text-slate-100 lg:hidden">
-              <Menu className="h-5 w-5" />
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${collapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+        <header className="sticky top-0 z-30 h-16 bg-[#101726]/80 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 text-slate-300 hover:bg-slate-800/80 rounded-xl lg:hidden cursor-pointer transition-colors"
+            >
+              <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden min-w-0 sm:block">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#82908d]">Workspace / {pageLabel}</p>
-              <h1 className="mt-1 truncate text-[15px] font-semibold text-slate-100">{pageLabel}</h1>
-            </div>
+
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex w-44 items-center gap-2.5 rounded-lg border border-white/[0.09] bg-[#15191c] px-3 py-2 text-xs text-[#9aa9a5] transition-colors hover:border-slate-600 hover:text-slate-200 sm:w-64 lg:w-72"
+              className="flex items-center gap-2.5 px-3 py-1.5 text-xs text-slate-300 bg-[#131D31]/80 hover:bg-[#1A243B] border border-slate-800 hover:border-slate-700 rounded-xl transition-all w-48 sm:w-72 cursor-pointer shadow-[0_0_0_1px_rgba(148,163,184,0.04)]"
             >
-              <Search className="h-3.5 w-3.5" />
-              <span className="truncate">Search OneSpace</span>
-              <kbd className="ml-auto hidden rounded border border-slate-700 bg-[#0b0d0f] px-1.5 py-0.5 text-[9px] text-[#82908d] sm:inline-block">⌘K</kbd>
+              <Search className="w-3.5 h-3.5 text-slate-400" />
+              <span className="truncate">Search OneSpace...</span>
+              <kbd className="hidden sm:inline-block ml-auto text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono border border-slate-700">
+                Ctrl+K
+              </kbd>
             </button>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden h-5 w-px bg-slate-700/50 sm:block" />
+
+          <div className="flex items-center gap-2">
             <NotificationDropdown />
-            <div className="hidden items-center gap-2.5 border-l border-slate-700/50 pl-3 sm:flex">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2b5144] text-[10px] font-semibold uppercase text-[#e4f4ed]">{initials}</div>
-              <div className="hidden leading-tight lg:block">
-                <p className="max-w-[120px] truncate text-[11px] font-semibold text-slate-200">{user?.name || 'User'}</p>
-                <p className="mt-0.5 text-[10px] text-[#82908d]">Personal workspace</p>
-              </div>
-              <UserRound className="h-3.5 w-3.5 text-slate-600" />
-            </div>
-            <Bell className="sr-only" aria-hidden="true" />
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-[1480px] flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           <Outlet />
         </main>
       </div>

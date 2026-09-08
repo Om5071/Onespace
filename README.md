@@ -54,40 +54,21 @@ onespace/
 
 ## Quick Start Guide
 
-From the extracted `onespace` directory, install dependencies once in each application:
-
-```bash
-cd onespace-backend
-npm install
-cd ../onespace-frontend
-npm install
-```
-
 ### 1. Start the Backend API Server
 ```bash
 cd onespace-backend
 npm start
 ```
-The server will run at `http://localhost:5000` with automatic connection to your local MongoDB or fallback in-memory MongoDB. In development mode, the server automatically creates the single workspace profile below so a separate seed step is not required for login.
+The server will run at `http://localhost:5000` with automatic connection to your local MongoDB or fallback in-memory MongoDB.
 
 ### 2. Start the React Frontend
-Open a second terminal:
-
 ```bash
 cd onespace-frontend
 npm run dev
 ```
 The frontend will start at `http://localhost:5173`.
 
-### 3. Local Workspace Login
-
-Use the single seeded workspace profile on the login screen:
-
-| Email | Password | Role |
-| --- | --- | --- |
-| `om@gmail.com` | `654321` | User |
-
-### 4. Run Backend Self-Test Suite
+### 3. Run Backend Self-Test Suite
 ```bash
 cd onespace-backend
 npm test

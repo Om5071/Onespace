@@ -37,6 +37,15 @@ export const formatTime = (dateString) => {
   }).format(date);
 };
 
+export const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(Number(amount) || 0);
+};
+
 export const formatRelativeTime = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
